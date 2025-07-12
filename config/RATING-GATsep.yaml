@@ -1,0 +1,53 @@
+method: 'DPM-SNC'
+exp_name: 'HPO'
+seed: 0
+
+# data : pubmed, citeseer, cora, Cornell, Texas, Wisconsin, Photo, Computers
+data:
+  data: Amazon-ratings
+  dir: './data'
+  nfeat: 300
+  nlabel: 5
+
+# temp: temperatures in constructing a buffer
+diffusion:
+  method: LP  # ['LP', 'Continuous', 'Discrete']
+  step: 80
+  s: 0.008
+  coef: 1
+  temp: 0.1
+  simple_temp: 0.5
+  priority_temp: 0.5
+  multichain: False
+  estep_corr_dist: 'LF-Unif' # Unif, UM, LF-Unif, LF-UM (UM - uncertainty minimization, LF - labeled first)
+  eval_corr_dist: 'LF-Unif' # Unif, UM, LF-Unif, LF-UM (UM - uncertainty minimization, LF - labeled first)
+  weightts: False
+  emphasize_labeled: True
+  learn_identity: True
+
+model:
+  model: GATsepConv
+  denoise_model: v1
+  nhid: 128
+  num_layers: 2
+  num_linears: 1
+  type: 1    # 1 - ourGATsep,  0 - GATsep
+
+# load_start: number of iterations in initial maximization step
+# load_interval: number of iterations in maximization step
+train:
+  load_start: 2000
+  num_epochs: 20000
+  pre_train_epochs: 1000
+  lr_simple: 0.001
+  print_interval: 100
+  load_interval: 50
+  time_batch: 8
+  lr: 0.0001
+  lr_diffusion: 0.001
+  weight_decay: 0
+  weight_decay_diffusion: 0
+  lr_schedule: False
+  grad_norm: 1
+  lr_decay: 0.99999
+  priority_queue: True
